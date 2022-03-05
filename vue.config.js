@@ -41,7 +41,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/dev-api': {
-        target: 'https://192.168.0.120:8106', //目标接口域名
+        target: 'https://192.168.0.100:8106', //目标接口域名
         // target: 'http://xiangczx.tkkj.ltd',
         secure: false, //验证是否https访问
         changeOrigin: true, //是否跨域
