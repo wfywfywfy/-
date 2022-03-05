@@ -1,19 +1,26 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { logout, getInfo } from '@/api/user'
+import { getToken, setToken, removeToken, getUserInfo, setUserInfo, removeUserInfo } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { login } from '@/api/login'
 
+import Cookies from 'js-cookie'
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  userInfo: {}
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
+  setUserInfo: (state, userInfo) => {
+    state.userInfo = userInfo
+  },
+
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
   },
@@ -31,12 +38,24 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+
+    const { username, password: pwd } = userInfo
+
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login({ username: username.trim(), pwd: pwd }).then(response => {
+        // console.log('response', response);
+
+        // const { data } = response
+
+
+        // commit('SET_TOKEN', data.token)
+        // setToken(data.token)
+
+        const userInfo = response.obj
+
+        commit('setUserInfo', userInfo)
+
+        setUserInfo(userInfo)
         resolve()
       }).catch(error => {
         reject(error)
